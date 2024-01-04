@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styles from './ReservationForm.module.css';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ReservationForm = () => {
   const [formData, setFormData] = useState({
@@ -37,37 +39,35 @@ const ReservationForm = () => {
 
     const handleReservation = async (formData) => {
       try {
-
-        console.log("form data --> ", formData);
         const response = await axios.post('https://slot-booking-backend-roan.vercel.app/api/reserve', formData, {
           headers: {
             'Content-Type': 'application/json',
           },
         });
-        if (response.status === 201) {
-          alert('Reservation sucessfully created');
-          console.log('Reservation created:', response.data);
-        } else {
-          alert('Reservation failed');
-          console.error('Reservation creation failed:', response.statusText);
-        }
+        return response.status === 201;
       } catch (error) {
-        alert('unable to process request, try again');
-        console.error('Error:', error);
+        toast.error('unable to create reservation, try again', {
+          autoClose: 1000
+        });
+        return false;
       }
     };
 
-    try {
-      await handleReservation(formData);
-      setTimeout(() => {
-        alert('Payment successful!'); // Replace with your modal or message
-        // You can perform other actions here after the payment confirmation
-      }, 2000);
+    const succes = await handleReservation(formData);
+
+    if (succes) {
+      toast.success('Reservation created, payment is in progess...');
+      try {
+        setTimeout(() => {
+          toast.success('Payment successful!', {
+            autoClose: 2000,
+          });
+        }, 2000);
+      } catch (error) {
+        toast.error('Payment failed');
+      }
     }
-    catch (error) {
-      alert(error.message);
-      console.error('Reservation creation failed:', error.message);
-    }
+
   }
   return (
     <form className={styles.formContainer} onSubmit={handleSubmit}>
