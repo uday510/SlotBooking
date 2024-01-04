@@ -56,9 +56,9 @@ const ReservationForm = () => {
     const succes = await handleReservation(formData);
 
     if (succes) {
-      toast.success('Reservation created, payment is in progess...', { autoClose: 1000 });
+      toast.success('Reservation created, payment is in progess...', { autoClose: 2000 });
 
-      for (let i = 0; i < 10000000; ++i) { }
+      for (let i = 0; i < 100000000; ++i) { }
       try {
         setTimeout(() => {
           toast.success('Payment successful!', {
