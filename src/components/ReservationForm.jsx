@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const ReservationForm = () => {
+const ReservationForm = ({ handleReservationSuccess }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -55,19 +55,28 @@ const ReservationForm = () => {
 
     const succes = await handleReservation(formData);
 
-    if (succes) {
-      toast.success('Reservation created, payment is in progess...', { autoClose: 2000 });
+    // if (succes) {
+    //   toast.success('Reservation created, payment is in progess...', { autoClose: 2000 });
 
-      for (let i = 0; i < 100000000; ++i) { }
-      try {
-        setTimeout(() => {
-          toast.success('Payment successful!', {
-            autoClose: 2000,
-          });
-        }, 2000);
-      } catch (error) {
-        toast.error('Payment failed');
-      }
+    //   setTimeout(() => {
+    //     <div>
+    //       <p>Please make a payment</p>
+    //       <button>Make Payment</button>
+    //     </div>
+    //   }, 2000);
+    //   try {
+    //     setTimeout(() => {
+    //       toast.success('Payment successful!', {
+    //         autoClose: 2000,
+    //       });
+    //     }, 2000);
+    //   } catch (error) {
+    //     toast.error('Payment failed');
+    //   }
+    // }
+
+    if (succes) {
+      handleReservationSuccess();
     }
 
   }
