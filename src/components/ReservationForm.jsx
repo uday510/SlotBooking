@@ -20,10 +20,25 @@ const ReservationForm = ({ handleReservationSuccess }) => {
     return now.toISOString().slice(0, 16); // Format: YYYY-MM-DDTHH:mm
   }
 
+
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  //   setErrors({ ...errors, [e.target.name]: '' });
+  // };
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: '' });
+    const { name, value } = e.target;
+    let errorMessage = '';
+
+    // Input validation for the "name" field
+    if (name === 'name') {
+      const isValidName = /^[a-zA-Z\s]*$/.test(value);
+      errorMessage = !isValidName ? 'Please enter alphabetic characters and spaces only' : '';
+    }
+
+    setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: errorMessage });
   };
+
 
   const handleReservation = async (formData) => {
     try {
@@ -76,7 +91,10 @@ const ReservationForm = ({ handleReservationSuccess }) => {
         onChange={handleChange}
         className={styles.inputField}
         placeholder="Name"
+        pattern="[A-Za-z ]+"
+        title="Please enter alphabetic characters only"
       />
+
       {errors.name && <span className={styles.errorMessage}>{errors.name}</span>}
 
       <input
@@ -96,7 +114,10 @@ const ReservationForm = ({ handleReservationSuccess }) => {
         onChange={handleChange}
         className={styles.inputField}
         placeholder="Phone"
+        pattern="[0-9]*"
+        title="Please enter numbers only"
       />
+
       {errors.phone && <span className={styles.errorMessage}>{errors.phone}</span>}
       <input
         type="datetime-local"
