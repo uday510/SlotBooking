@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './ReservationForm.module.css';
 import axios from 'axios';
+import Header from './Header';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -24,6 +25,23 @@ const ReservationForm = ({ handleReservationSuccess }) => {
     setErrors({ ...errors, [e.target.name]: '' });
   };
 
+  const handleReservation = async (formData) => {
+    try {
+      const response = await axios.post('https://slot-booking-backend-roan.vercel.app/api/reserve', formData, {
+        // const response = await axios.post('http://localhost:4000/api/reserve', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.status === 201;
+    } catch (error) {
+      toast.error('unable to create reservation, try again', {
+        autoClose: 1000
+      });
+      return false;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -34,54 +52,23 @@ const ReservationForm = ({ handleReservationSuccess }) => {
         phone: !formData.phone ? 'Phone is required' : '',
         slot: !formData.slot ? 'Slot is required' : '',
       });
-      return;
     }
+    const success = await handleReservation(formData);
 
-    const handleReservation = async (formData) => {
-      try {
-        const response = await axios.post('https://slot-booking-backend-roan.vercel.app/api/reserve', formData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        return response.status === 201;
-      } catch (error) {
-        toast.error('unable to create reservation, try again', {
-          autoClose: 1000
-        });
-        return false;
-      }
-    };
+    if (success) {
+      toast.success('Reservation success, please make payment', {
+        autoClose: 1000,
+        onClose: () => {
+          handleReservationSuccess();
+        },
 
-    const succes = await handleReservation(formData);
-
-    // if (succes) {
-    //   toast.success('Reservation created, payment is in progess...', { autoClose: 2000 });
-
-    //   setTimeout(() => {
-    //     <div>
-    //       <p>Please make a payment</p>
-    //       <button>Make Payment</button>
-    //     </div>
-    //   }, 2000);
-    //   try {
-    //     setTimeout(() => {
-    //       toast.success('Payment successful!', {
-    //         autoClose: 2000,
-    //       });
-    //     }, 2000);
-    //   } catch (error) {
-    //     toast.error('Payment failed');
-    //   }
-    // }
-
-    if (succes) {
-      handleReservationSuccess();
+      });
     }
+  };
 
-  }
   return (
     <form className={styles.formContainer} onSubmit={handleSubmit}>
+      <Header />
       <input
         type="text"
         name="name"

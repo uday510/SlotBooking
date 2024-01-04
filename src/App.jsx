@@ -4,26 +4,20 @@ import ReservationForm from './components/ReservationForm.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
+import PaymentContainer from './components/PaymentContainer';
+
 export default function App() {
   const [showPayment, setShowPayment] = useState(false);
-  // return (
-  //   <>
-  //     <Header />
-  //     <ReservationForm />
-  //     <ToastContainer />
-  //   </>
-  // );
   const handleReservationSuccess = () => {
     setShowPayment(true);
   };
-  
+
   return (
     <>
-      <Header />
-      {!showPayment ? ( // Show ReservationForm if showPayment is false
+      {!showPayment ? (
         <ReservationForm handleReservationSuccess={handleReservationSuccess} />
       ) : (
-        <PaymentContainer /> // Show PaymentContainer if showPayment is true
+        <PaymentContainer />
       )}
       <ToastContainer />
     </>

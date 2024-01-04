@@ -1,22 +1,42 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import styles from './PaymentContainer.module.css';
 
 const PaymentContainer = () => {
-  const [showLoader, setShowLoader] = useState(true);
+  const [showLoader, setShowLoader] = useState(false);
+  const [paymentCompleted, setPaymentCompleted] = useState(false);
 
-  // Simulating payment processing
-  setTimeout(() => {
-    setShowLoader(false); // Hide loader after 2 seconds
-  }, 2000);
+  const handlePayment = () => {
+    setShowLoader(true);
+    setTimeout(() => {
+      setShowLoader(false);
+      setPaymentCompleted(true);
+    }, 2000);
+  };
 
   return (
-    <div>
-      {showLoader ? (
-        <div>Loading...</div> // Your loader component or message
-      ) : (
-        <div>Payment completed!</div> // Your payment completion UI
+    <div className={styles.container}>
+      {!paymentCompleted && (
+        <div className={styles.paymentSection}>
+          <p className={styles.paymentText}>Pay ₹0</p>
+          <button className={styles.paymentButton} onClick={handlePayment}>Make Payment</button>
+        </div>
+      )}
+      {showLoader && !paymentCompleted && (
+        <div className={styles.loader}>
+          <FontAwesomeIcon icon={faSpinner} spin />
+          <span className={styles.loaderText}>Processing...</span>
+        </div>
+      )}
+      {paymentCompleted && (
+        <div className={styles.paymentSuccess}>
+          <p className={styles.successText}>Payment Completed</p>
+        </div>
       )}
     </div>
   );
 };
 
 export default PaymentContainer;
+
